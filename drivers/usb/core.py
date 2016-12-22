@@ -119,6 +119,28 @@ class USBDriver(AbstractDriver):
         return True
 
 
+    def homePosition(self):
+        if self._serial is None:
+            _LOGGER.error('Serial connection is disabled!')
+
+            return False
+
+        try:
+            self._serial.write(self._PROTOCOL.homePosition())
+
+        except (
+            serial.serialutil.SerialException,
+            serial.serialutil.SerialTimeoutException
+        ):
+            _LOGGER.error('USB cable is disconnected!')
+
+            self.disconnect()
+
+            return False
+
+        return True
+
+
     def play(self, slot):
         if self._serial is None:
             _LOGGER.error('Serial connection is disabled!')
